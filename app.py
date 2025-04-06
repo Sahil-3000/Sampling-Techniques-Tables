@@ -6,7 +6,8 @@ from reportlab.platypus import Table, TableStyle
 import random
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
+
 
 def draw_table(pdf, data, x, y, col_widths):
     table = Table(data, colWidths=col_widths)
