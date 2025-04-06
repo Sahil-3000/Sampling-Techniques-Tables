@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sampling Technique Tables</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Sampling Technique Tables</h1>
+    <p>Generate PDF by entering Experiment Number:</p>
+    <form id="downloadForm">
+      <input type="number" id="experimentNumber" placeholder="Enter Experiment Number" required />
+      <button type="submit">Generate PDF</button>
+    </form>
+    <p id="statusMessage"></p>
+  </div>
+
+  <script>
+    document.getElementById('downloadForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const experimentNumber = document.getElementById('experimentNumber').value;
+      const statusMessage = document.getElementById('statusMessage');
+      statusMessage.textContent = "";
+
+      if (!experimentNumber) {
+        alert("Please enter an experiment number.");
+        return;
+      }
+
+      try {
+        const response = await fetch('/generate-pdf', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ experimentNo: experimentNumber })
+        });
+
+        if (response.ok) {
+          const blob = await response.blob();
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = `strata_experiment_${experimentNumber}.pdf`;
+          link.click();
+          statusMessage.textContent = "PDF generated and downloaded successfully!";
+        } else {
+          const errorData = await response.json();
+          statusMessage.textContent = "Error: " + (errorData.error || "PDF generation failed.");
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        statusMessage.textContent = "An error occurred. Please try again.";
+      }
+    });
+  </script>
+</body>
+</html>
