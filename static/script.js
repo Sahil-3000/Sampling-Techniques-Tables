@@ -35,4 +35,4 @@ document.getElementById('downloadForm').addEventListener('submit', async functio
       console.error("Fetch error:", error);
       statusMessage.textContent = "An error occurred. Please try again.";
     }
-  });
+  }); 

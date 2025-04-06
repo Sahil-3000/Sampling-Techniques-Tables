@@ -52,7 +52,17 @@ def create_pdf(filename):
     tables_data = []
 
     for label, pages in strata_pages.items():
-        table_rows = [["S.No.", "Page No.", "No. of words(yi)", "yi²"]]
+        table_rows = []
+        if label=="A-E":
+                table_rows= [["S.No.", "Page No.", "No. of words(y₁i)", "y₁i²"]]
+        elif label=="F-J":
+                table_rows= [["S.No.", "Page No.", "No. of words(y2i)", "y2i²"]]
+        elif label=="K-O":
+                table_rows= [["S.No.", "Page No.", "No. of words(y3i)", "y3i²"]]
+        elif label=="P-T":
+                table_rows= [["S.No.", "Page No.", "No. of words(y4i)", "y4i²"]]
+        else:
+                table_rows= [["S.No.", "Page No.", "No. of words(y5i)", "y5i²"]]
         sum_yi = 0
         sum_yi2 = 0
         for i, page in enumerate(pages):
@@ -104,20 +114,7 @@ def create_pdf(filename):
 def index():
     return render_template("index.html")
 
-# @app.route('/generate-pdf', methods=['POST'])
-# def generate_pdf():
-#     data = request.get_json()
-#     experiment_no = data.get('experimentNo')
 
-#     if not experiment_no:
-#         return jsonify({'error': 'Experiment number is required'}), 400
-
-#     filename = f"strata_experiment_{experiment_no}.pdf"
-#     create_pdf(filename)
-
-#     return send_file(filename, as_attachment=True)
-
-# import os
 
 @app.route('/generate-pdf', methods=['POST'])
 def generate_pdf():
