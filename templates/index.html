@@ -13,7 +13,10 @@
     <h1>Sampling Technique Tables</h1>
     <p>Generate PDF by entering Experiment Number:</p>
     <form id="downloadForm">
-      <input type="number" id="experimentNumber" placeholder="Enter Experiment Number" required />
+      <div class="inputs">
+        <input type="number" id="experimentNumber" placeholder="Enter Experiment Number" required />
+        <input type="string" id="studentName" placeholder="Enter Your Name" required />
+      </div>
       <button type="submit">Generate PDF</button>
     </form>
     <p id="statusMessage"></p>
@@ -24,11 +27,12 @@
       e.preventDefault();
 
       const experimentNumber = document.getElementById('experimentNumber').value;
+      const studentName = document.getElementById('studentName').value;
       const statusMessage = document.getElementById('statusMessage');
       statusMessage.textContent = "";
 
-      if (!experimentNumber) {
-        alert("Please enter an experiment number.");
+      if (!experimentNumber || !studentName)  {
+        alert("Please enter an experiment number and your name.");
         return;
       }
 
@@ -38,14 +42,14 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ experimentNo: experimentNumber })
+          body: JSON.stringify({ experimentNo: experimentNumber, studentName: studentName })
         });
 
         if (response.ok) {
           const blob = await response.blob();
           const link = document.createElement('a');
           link.href = window.URL.createObjectURL(blob);
-          link.download = `strata_experiment_${experimentNumber}.pdf`;
+          link.download = `strata_experiment_${experimentNumber}_${studentName}.pdf`;
           link.click();
           statusMessage.textContent = "PDF generated and downloaded successfully!";
         } else {
