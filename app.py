@@ -117,5 +117,28 @@ def generate_pdf():
 
     return send_file(filename, as_attachment=True)
 
+import os
+
+@app.route('/generate-pdf', methods=['POST'])
+def generate_pdf():
+    data = request.get_json()
+    experiment_no = data.get('experimentNo')
+
+    if not experiment_no:
+        return jsonify({'error': 'Experiment number is required'}), 400
+
+    # Create folder if it doesn't exist
+    folder_path = os.path.join(os.getcwd(), "generated_pdfs")
+    os.makedirs(folder_path, exist_ok=True)
+
+    # Save the PDF in that folder
+    filename = f"strata_experiment_{experiment_no}.pdf"
+    file_path = os.path.join(folder_path, filename)
+    
+    create_pdf(file_path)
+
+    return send_file(file_path, as_attachment=True)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
