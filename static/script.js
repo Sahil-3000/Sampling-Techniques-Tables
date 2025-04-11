@@ -2,12 +2,13 @@ document.getElementById('downloadForm').addEventListener('submit', async functio
     e.preventDefault();
 
     const experimentNumber = document.getElementById('experimentNumber').value;
+    const rollNo = document.getElementById('rollNo').value;
     const studentName = document.getElementById('studentName').value;
     const statusMessage = document.getElementById('statusMessage');
     statusMessage.textContent = "";
 
-    if (!experimentNumber || !studentName)  {
-      alert("Please enter an experiment number and your name.");
+    if (!experimentNumber || !studentName || !rollNo)  {
+      alert("Please enter an experiment number ,your roll no. and name.");
       return;
     }
 
@@ -17,7 +18,7 @@ document.getElementById('downloadForm').addEventListener('submit', async functio
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ experimentNo: experimentNumber, studentName: studentName })
+        body: JSON.stringify({ experimentNo: experimentNumber,rollNo:rollNo, studentName: studentName })
       });
 
       if (response.ok) {
@@ -35,4 +36,4 @@ document.getElementById('downloadForm').addEventListener('submit', async functio
       console.error("Fetch error:", error);
       statusMessage.textContent = "An error occurred. Please try again.";
     }
-  }); 
+  });
