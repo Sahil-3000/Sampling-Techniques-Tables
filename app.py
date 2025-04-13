@@ -278,7 +278,8 @@ def create_pdf(filename, rollNo):
     
     stratum_sizes = {k: end - start + 1 for k, (start, end) in strata_ranges.items()}
     total_pages = sum(stratum_sizes.values())
-
+    
+    
     # Step 3: Distribute sample proportionally
     sample_counts = {}
     for k, size in stratum_sizes.items():
@@ -324,14 +325,11 @@ def create_pdf(filename, rollNo):
         table_rows = [["S.No.", "Page No.", f"No. of words(y{idx}i)", f"y{idx}i²"]]
         sum_yi = 0
         sum_yi2 = 0
-        for i, page in enumerate(pages):
-            
+        for i, page in enumerate(pages): 
             yi = random.randint(10, 50)
-            
             yi2 = yi ** 2
             sum_yi += yi
             sum_yi2 += yi2
-            
             table_rows.append([str(i + 1), str(page), str(yi), str(yi2)])
         yiSum.append(sum_yi)
         yi2Sum.append(sum_yi2)
@@ -346,7 +344,7 @@ def create_pdf(filename, rollNo):
     
     if(populationSize):
         for i, (title, data) in enumerate(tables_data):
-            pdf.setFont("Helvetica", 10)
+            pdf.setFont("Helvetica-Bold", 10)
             x = x_left if i % 2 == 0 else x_right
             if i % 2 == 0 and i != 0:
                 y_position -= 180
@@ -372,7 +370,7 @@ def create_pdf(filename, rollNo):
         sum_yi = yiSum[i-1]
         sum_yi2 = yi2Sum[i-1]
         yi = round(sum_yi/count,6)
-        Fi = round((1-count/size)/count,6)
+        Fi = round((1-(count/size))/count,6)
         Wi = round(size/int(populationSize),6)
         sd = round(((sum_yi2) - (sum_yi**2)/count)/(count-1),6)
         SD = round(Fi*(Wi**2)*(sd),6)
@@ -381,7 +379,7 @@ def create_pdf(filename, rollNo):
         calcRow = [str(i), str(count),str(sum_yi),yi,str(size),round(yi*size,6),Fi,Wi,sd,SD]
         calcTable.append(calcRow)
     
-    calcTable.append(["Total", "", "", "", "",round(nySum,6), "", "", "", round(math.sqrt(SD_Sum),6)])
+    calcTable.append(["Total", "", "", "", "",round(nySum,6), "", "", "", round((SD_Sum),6)])
 
     draw_table(pdf, calcTable, x = 10,y = 630,col_widths=[40,35,40,70,40,70,50,70,70,85],row_heights=[30,25,25,25,25,25,25])
     
