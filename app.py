@@ -4,6 +4,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.platypus import Table, TableStyle
 import random
+import math
 import os
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
@@ -182,10 +183,10 @@ position_map = {
         0: (310, 650,50), 1: (510, 650,300), 2: (165, 285,50), 3: (370, 490,300), 4: (15, 350,300),
     },
     rollNo_9[3]: {
-        0: (325, 660,50), 1: (380, 660,300), 2: (145,300,50), 3: (240, 360,300), 4: (70, 225,300),
+        0: (320, 655,50), 1: (380, 660,300), 2: (130, 285,50), 3: (240, 360,300), 4: (50, 215,300),
     },
     rollNo_9[4]: {
-         0: (468, 660,50), 1: (340, 660,300), 2: (325, 445,50), 3: (180, 320,300), 4: (20, 300,50),
+         0: (364, 660,50), 1: (545, 660,300), 2: (230, 345,50), 3: (400, 520,300), 4: (40, 375,300),
     },
     
     # For rollNo_10 students
@@ -206,11 +207,13 @@ position_map = {
     },
    
 }
-   
+
+yiSum = []
+yi2Sum = []
 
 
-def draw_table(pdf, data, x, y, col_widths):
-    table = Table(data, colWidths=col_widths)
+def draw_table(pdf, data, x, y, col_widths,row_heights=None):
+    table = Table(data, colWidths=col_widths, rowHeights=row_heights)
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.white),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
@@ -221,7 +224,7 @@ def draw_table(pdf, data, x, y, col_widths):
         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
     ]))
-    table.wrapOn(pdf, 500, 600)
+    table.wrapOn(pdf, 500, 842)
     table.drawOn(pdf, x, y)
 
 def create_pdf(filename, rollNo):
@@ -311,29 +314,39 @@ def create_pdf(filename, rollNo):
         strata_data.append([k, str(size), str(count), pages])
     strata_data.append(["", str(populationSize), str(total_sample), ""])
 
-    draw_table(pdf, strata_data, x=30, y=680, col_widths=[60, 65, 65, 350])
+    draw_table(pdf, strata_data, x=30, y=680, col_widths=[50, 65, 65, 365],row_heights=None)
 
     # Step 6: Detailed stratum-wise tables
+
+    
     tables_data = []
     for idx, (label, pages) in enumerate(strata_pages.items(), start=1):
         table_rows = [["S.No.", "Page No.", f"No. of words(y{idx}i)", f"y{idx}i²"]]
         sum_yi = 0
         sum_yi2 = 0
         for i, page in enumerate(pages):
+            
             yi = random.randint(10, 50)
+            
             yi2 = yi ** 2
             sum_yi += yi
             sum_yi2 += yi2
+            
             table_rows.append([str(i + 1), str(page), str(yi), str(yi2)])
+        yiSum.append(sum_yi)
+        yi2Sum.append(sum_yi2)
+        
         table_rows.append(["", "Total", str(sum_yi), str(sum_yi2)])
         tables_data.append((f"STRATUM {label}", table_rows))
 
     # Step 7: Draw each detailed table
     x_left, x_right = 50, 300
-    y_position = 350
+    y_position = 450
 
-    for i, (title, data) in enumerate(tables_data):
-            pdf.setFont("Helvetica-Bold", 10)
+    
+    if(populationSize):
+        for i, (title, data) in enumerate(tables_data):
+            pdf.setFont("Helvetica", 10)
             x = x_left if i % 2 == 0 else x_right
             if i % 2 == 0 and i != 0:
                 y_position -= 180
@@ -343,9 +356,35 @@ def create_pdf(filename, rollNo):
                 y_position, title_y, x = position_map[rollNo][i]
 
             pdf.drawString(x, title_y, title)
-            draw_table(pdf, data, x, y_position, col_widths=[40, 50, 82, 50])
-        
+            draw_table(pdf, data, x, y_position, col_widths=[40, 50, 88, 50],row_heights=None)
+    
+    pdf.showPage()
+    pdf.setFont("Helvetica-Bold",16)
+    pdf.drawString(250,820,"Calculations")
+    
+    
+    nySum = 0 
+    SD_Sum = 0     
+    calcTable=[["Sr. No.","ni","ΣYi","Yi = ΣYi/ni","Ni", "NiYi","(1-fi)/ni","Wi","Si²","((1-fi)/ni)Wi²Si²"],]
+    for i,k in enumerate(strata_labels,start=1):
+        size = stratum_sizes[k]
+        count = sample_counts[k]
+        sum_yi = yiSum[i-1]
+        sum_yi2 = yi2Sum[i-1]
+        yi = round(sum_yi/count,6)
+        Fi = round((1-count/size)/count,6)
+        Wi = round(size/int(populationSize),6)
+        sd = round(((sum_yi2) - (sum_yi**2)/count)/(count-1),6)
+        SD = round(Fi*(Wi**2)*(sd),6)
+        nySum = nySum + yi*size
+        SD_Sum = SD_Sum + SD
+        calcRow = [str(i), str(count),str(sum_yi),yi,str(size),round(yi*size,6),Fi,Wi,sd,SD]
+        calcTable.append(calcRow)
+    
+    calcTable.append(["Total", "", "", "", "",round(nySum,6), "", "", "", round(math.sqrt(SD_Sum),6)])
 
+    draw_table(pdf, calcTable, x = 10,y = 630,col_widths=[40,35,40,70,40,70,50,70,70,85],row_heights=[30,25,25,25,25,25,25])
+    
     pdf.save()
 
 
