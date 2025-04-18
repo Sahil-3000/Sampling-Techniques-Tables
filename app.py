@@ -399,11 +399,11 @@ def index():
 def generate_pdf():
     data = request.get_json()
     experiment_no = data.get('experimentNo')
-    population_size = data.get('populationSize')
+    # population_size = data.get('populationSize')
     rollNo = data.get('rollNo')
     student_name = data.get('studentName')
     if not experiment_no:
-        return jsonify({'error': 'Experiment number and name is required'}), 400
+        return jsonify({'error': 'Experiment number and roll no. is required'}), 400
 
     # Create folder if it doesn't exist
     folder_path = os.path.join(os.getcwd(), "generated_pdfs")
