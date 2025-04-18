@@ -9,6 +9,7 @@ import os
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
+
 rollNo_1 = [5401,5411,5421,5431,5441,5451] #500
 rollNo_2 = [5402,5412,5422,5432,5442,5452] #550
 rollNo_3 = [5403,5413,5423,5433,5443,5453] #600
@@ -207,6 +208,7 @@ position_map = {
     },
    
 }
+
 
 yiSum = []
 yi2Sum = []
