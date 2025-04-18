@@ -7,7 +7,16 @@ import random
 import math
 import os
 
+
 app = Flask(__name__, static_folder='static', template_folder='templates')
+
+
+@app.route('/')
+def index():
+    return render_template("index.html")
+
+
+
 
 
 rollNo_1 = [5401,5411,5421,5431,5441,5451] #500
@@ -389,18 +398,14 @@ def create_pdf(filename, rollNo):
 
 
 
-@app.route('/')
-def index():
-    return render_template("index.html")
-
-
 
 @app.route('/generate-pdf', methods=['POST'])
 def generate_pdf():
     data = request.get_json()
+    rollNo = data.get('rollNo')
     experiment_no = data.get('experimentNo')
     # population_size = data.get('populationSize')
-    rollNo = data.get('rollNo')
+    
     student_name = data.get('studentName')
     if not experiment_no:
         return jsonify({'error': 'Experiment number and roll no. is required'}), 400
@@ -413,6 +418,7 @@ def generate_pdf():
     filename = f"{student_name}_strata_experiment_{experiment_no}.pdf"
     file_path = os.path.join(folder_path, filename)
     
+    # print(f"Generating PDF for {student_name} with roll no {rollNo}")
     create_pdf(file_path,rollNo)
 
     return send_file(file_path, as_attachment=True)

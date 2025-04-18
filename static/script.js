@@ -1,9 +1,9 @@
 document.getElementById('downloadForm').addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const experimentNumber = document.getElementById('experimentNumber').value;
-    const rollNo = document.getElementById('rollNo').value;
-    const studentName = document.getElementById('studentName').value;
+    const experimentNumber = document.getElementById('experiment-Number').value;
+    const rollNo = document.getElementById('roll-No').value;
+    const studentName = document.getElementById('student-Name').value;
     const statusMessage = document.getElementById('statusMessage');
     statusMessage.textContent = "";
 
