@@ -7,13 +7,11 @@ import random
 import math
 import os
 
+#Link Of the Project:
+#https://sampling-techniques-tables.onrender.com/
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
-
-@app.route('/')
-def index():
-    return render_template("index.html")
 
 
 
@@ -425,6 +423,10 @@ def generate_pdf():
 
     return send_file(file_path, as_attachment=True)
 
+
+@app.route('/')
+def index():
+    return render_template("index.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
