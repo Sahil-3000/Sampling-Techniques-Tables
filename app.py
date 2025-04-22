@@ -384,10 +384,10 @@ def create_pdf(filename, rollNo):
         yi = round(sum_yi/count,6)
         Fi = round((1-(count/size))/count,6)
         Wi = round(size/int(populationSize),6)
-        numerator = (sum_yi2 - (sum_yi ** 2) / count)
-        numerator = max(0, numerator)
-        sd = round(numerator / (count - 1), 6)
-        # sd = round(((sum_yi2) - (sum_yi**2)/count)/(count-1),6)
+        # numerator = (sum_yi2 - (sum_yi ** 2) / count)
+        # numerator = max(0, numerator)
+        # sd = round(numerator / (count - 1), 6)
+        sd = round(((sum_yi2) - (sum_yi**2)/count)/(count-1),6)
         SD = round(Fi*(Wi**2)*(sd),6)
         nySum = nySum + yi*size
         SD_Sum = SD_Sum + SD
