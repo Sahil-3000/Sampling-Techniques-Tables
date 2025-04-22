@@ -234,8 +234,7 @@ def draw_table(pdf, data, x, y, col_widths,row_heights=None):
     table.drawOn(pdf, x, y)
 
 def create_pdf(filename, rollNo):
-    yiSum = []
-    yi2Sum = []
+    
     random.seed(int(rollNo))  # deterministic uniqueness per student
 
     pdf = canvas.Canvas(filename, pagesize=A4)
@@ -265,7 +264,9 @@ def create_pdf(filename, rollNo):
         populationSize = 900
     else:
         populationSize = 950
-
+        
+    yiSum = []
+    yi2Sum = [] 
     # Step 1: Randomly divide the population into 5 strata
     cut_points = sorted(random.sample(range(50, populationSize - 50), 4))
     cut_points = [0] + cut_points + [populationSize]
@@ -370,7 +371,8 @@ def create_pdf(filename, rollNo):
     
     
     nySum = 0 
-    SD_Sum = 0     
+    SD_Sum = 0   
+     
     calcTable=[["Sr. No.","ni","ΣYi","Yi = ΣYi/ni","Ni", "NiYi","(1-fi)/ni","Wi","Si²","((1-fi)/ni)Wi²Si²"],]
     for i,k in enumerate(strata_labels,start=1):
         size = stratum_sizes[k]
