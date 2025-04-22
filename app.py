@@ -3,6 +3,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.platypus import Table, TableStyle
+import numpy as np
 import random
 import math
 import os
@@ -237,9 +238,11 @@ def draw_table(pdf, data, x, y, col_widths,row_heights=None):
 
 def create_pdf(filename, rollNo):
     yiSum = []
-    yi2Sum = [] 
+    yi2Sum = []
+     
     random.seed(int(rollNo))  # deterministic uniqueness per student
-
+    
+    
     pdf = canvas.Canvas(filename, pagesize=A4)
     pdf.setTitle("Strata Tables")
     pdf.setFont("Helvetica-Bold", 16)
@@ -337,7 +340,7 @@ def create_pdf(filename, rollNo):
         sum_yi = 0
         sum_yi2 = 0
         for i, page in enumerate(pages): 
-            yi = random.randint(10, 50)
+            yi = np.random.randint(10, 50)
             yi2 = yi ** 2
             sum_yi += yi
             sum_yi2 += yi2
