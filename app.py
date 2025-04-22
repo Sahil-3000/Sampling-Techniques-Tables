@@ -14,9 +14,6 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 
 
 
-
-
-
 rollNo_1 = [5401,5411,5421,5431,5441,5451] #500
 rollNo_2 = [5402,5412,5422,5432,5442,5452] #550
 rollNo_3 = [5403,5413,5423,5433,5443,5453] #600
@@ -383,7 +380,10 @@ def create_pdf(filename, rollNo):
         yi = round(sum_yi/count,6)
         Fi = round((1-(count/size))/count,6)
         Wi = round(size/int(populationSize),6)
-        sd = round(((sum_yi2) - (sum_yi**2)/count)/(count-1),6)
+        numerator = (sum_yi2 - (sum_yi ** 2) / count)
+        numerator = max(0, numerator)
+        sd = round(numerator / (count - 1), 6)
+        # sd = round(((sum_yi2) - (sum_yi**2)/count)/(count-1),6)
         SD = round(Fi*(Wi**2)*(sd),6)
         nySum = nySum + yi*size
         SD_Sum = SD_Sum + SD
