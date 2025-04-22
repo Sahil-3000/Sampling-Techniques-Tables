@@ -12,7 +12,9 @@ import os
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
-
+@app.route('/')
+def index():
+    return render_template("index.html")
 
 rollNo_1 = [5401,5411,5421,5431,5441,5451] #500
 rollNo_2 = [5402,5412,5422,5432,5442,5452] #550
@@ -234,7 +236,8 @@ def draw_table(pdf, data, x, y, col_widths,row_heights=None):
     table.drawOn(pdf, x, y)
 
 def create_pdf(filename, rollNo):
-    
+    yiSum = []
+    yi2Sum = [] 
     random.seed(int(rollNo))  # deterministic uniqueness per student
 
     pdf = canvas.Canvas(filename, pagesize=A4)
@@ -265,8 +268,7 @@ def create_pdf(filename, rollNo):
     else:
         populationSize = 950
         
-    yiSum = []
-    yi2Sum = [] 
+    
     # Step 1: Randomly divide the population into 5 strata
     cut_points = sorted(random.sample(range(50, populationSize - 50), 4))
     cut_points = [0] + cut_points + [populationSize]
@@ -426,9 +428,7 @@ def generate_pdf():
     return send_file(file_path, as_attachment=True)
 
 
-@app.route('/')
-def index():
-    return render_template("index.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
