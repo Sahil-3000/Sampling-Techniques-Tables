@@ -245,6 +245,10 @@ def create_pdf(filename, rollNo):
     
     pdf = canvas.Canvas(filename, pagesize=A4)
     pdf.setTitle("Strata Tables")
+    pdf.setFillAlpha(0.5)
+    pdf.setFont("Helvetica", 8)
+    pdf.drawString(20, 830, "exp4")
+    pdf.setFillAlpha(1)
     pdf.setFont("Helvetica-Bold", 16)
     pdf.drawString(200, 820, "Tabulation and Observations")
 

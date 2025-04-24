@@ -126,7 +126,7 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
       doc.text('Practical of ' + document.getElementById('txtSubject').value, textX, subjectY, { align: 'center' });
     }
     else {
-      doc.text('Practical of Sampling Techniques and Design Of Experiment', textX, subjectY, { align: 'center' });
+      doc.text('Sampling Techniques and Design Of Experiment', textX, subjectY, { align: 'center' });
     }
 
 
@@ -153,9 +153,12 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
     doc.setLineWidth(0.5); // Set line width
     doc.line(30, rollNoY + 5, 180, rollNoY + 5); // Line after university name
     // Add footer text
-    const footerY = rollNoY + 23; // Position footer below the last entry
+    const courseY = rollNoY + 23; // Position footer below the last entry
     doc.setFontSize(20);
-    doc.text('5-Year Integrated M.Sc.(Hons.) Mathematics (7th Sem)', textX, footerY, { align: 'center' });
+    doc.text('5-Year Integrated M.Sc.(Hons.) Mathematics', textX, courseY, { align: 'center' });
+    const footerY = courseY + 10; // Position footer below the last entry
+    doc.setFontSize(12);
+    doc.text('(8th Sem)', textX, footerY, { align: 'center' });
 
     // Convert jsPDF output to an ArrayBuffer for merging
     const pdfBytes = doc.output('arraybuffer');
