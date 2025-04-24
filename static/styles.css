@@ -118,3 +118,11 @@ p {
 .btn-submit:hover {
     background-color: #45a049;
 }
+
+#txtUniversity,label[for="txtUniversity"],
+#txtDepartment,label[for="txtDepartment"],
+#txtSubject,label[for="txtSubject"],
+#txtSubmittedTo,label[for="txtSubmittedTo"]
+ {
+  display:none;
+}
