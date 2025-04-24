@@ -344,7 +344,7 @@ def create_pdf(filename, rollNo):
         sum_yi = 0
         sum_yi2 = 0
         for i, page in enumerate(pages): 
-            yi = np.random.randint(10, 50)
+            yi = random.randint(10, 50)
             yi2 = yi ** 2
             sum_yi += yi
             sum_yi2 += yi2
