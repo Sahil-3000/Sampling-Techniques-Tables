@@ -100,7 +100,7 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
     doc.setDrawColor(0); // Set the color for the line
     doc.setLineWidth(0.5); // Set line width
     doc.line(30, universityY + 5, 180, universityY + 5); // Line after university name
-    const departmentY = universityY + 23; // Spacing below the university name
+    const departmentY = universityY + 18; // Spacing below the university name
     const subjectY = departmentY + 23; // Spacing below the department name
 
     // Add text fields below the image
@@ -121,12 +121,14 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
     }
 
 
+    doc.setFontSize(15);
+    doc.text('Practical Of', textX, subjectY-10, { align: 'center' });
     doc.setFontSize(18);
     if (subject) {
-      doc.text('Practical of ' + document.getElementById('txtSubject').value, textX, subjectY, { align: 'center' });
+      doc.text(document.getElementById('txtSubject').value, textX, subjectY, { align: 'center' });
     }
     else {
-      doc.text('Sampling Techniques and Design Of Experiment', textX, subjectY, { align: 'center' });
+      doc.text('Sampling Techniques and Design Of Experiments', textX, subjectY, { align: 'center' });
     }
 
 
@@ -143,7 +145,7 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
       doc.text(`Prof. ${submittedTo}`, 50, submittedByY);
     }
     else{
-      doc.text(`Prof. Gulshan Taneja`, 50, submittedByY);
+      doc.text(`Prof. Gulshan Lal Taneja`, 50, submittedByY);
     }
     
     doc.text(document.getElementById('student-Name').value, 130, submittedByY);
@@ -171,7 +173,7 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
       })
       .then(firstMergeBytes => {
         // 3. Fetch the existing PDF file
-        return fetch('static/6-11 Sampling Techniques Practical File Final.pdf')
+        return fetch('static/6-11 experiments.pdf')
           .then(response => {
             if (!response.ok) {
               throw new Error('Failed to fetch existing PDF');
