@@ -163,13 +163,24 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
     doc.text('(8th Sem)', textX, footerY, { align: 'center' });
 
     // Convert jsPDF output to an ArrayBuffer for merging
-    const pdfBytes = doc.output('arraybuffer');
+    const titleBytes = doc.output('arraybuffer');
 
     // 1. Convert strataBlob to ArrayBuffer
     strataBlob.arrayBuffer()
       .then(strataBytes => {
-        // 2. First merge: cover page + strata PDF
-        return mergePDFs(pdfBytes, strataBytes);
+        // 2. First merge: cover page + index page 
+        return fetch('static/index.pdf')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch index PDF');
+            }
+            return response.arrayBuffer();
+          })
+          .then(indexBytes => {
+            // Merge title and index PDFs
+            return mergePDFs(titleBytes, indexBytes);
+          });
+        // return mergePDFs(titleBytes, strataBytes);
       })
       .then(firstMergeBytes => {
         // 3. Fetch the existing PDF file
