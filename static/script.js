@@ -164,7 +164,8 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
 
     // Convert jsPDF output to an ArrayBuffer for merging
     const titleBytes = doc.output('arraybuffer');
-
+    // const strataBytes = strataBlob.out('arraybuffer'); // Convert Blob to ArrayBuffer
+   
     // 1. Convert strataBlob to ArrayBuffer
     strataBlob.arrayBuffer()
       .then(strataBytes => {
@@ -179,10 +180,14 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
           .then(indexBytes => {
             // Merge title and index PDFs
             return mergePDFs(titleBytes, indexBytes);
-          });
+          })
+          .then(tiIndexBytes=>{
+            // 3. Merge title + index + strata
+            return mergePDFs(tiIndexBytes, strataBytes);
+          })
         // return mergePDFs(titleBytes, strataBytes);
       })
-      .then(firstMergeBytes => {
+      .then(tiIndexStrataBytes => {
         // 3. Fetch the existing PDF file
         return fetch('static/6-11 experiments.pdf')
           .then(response => {
@@ -193,7 +198,7 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
           })
           .then(existingPdfBytes => {
             // 4. Second merge: (cover+strata) + existing PDF
-            return mergePDFs(firstMergeBytes, existingPdfBytes);
+            return mergePDFs(tiIndexStrataBytes, existingPdfBytes);
           });
       })
       .then(finalPdfBytes => {
@@ -213,7 +218,7 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
         console.error("Error during PDF merging:", error);
         statusMessage.textContent = "Error merging PDFs: " + error.message;
       });
-  };
+    };
 
 
 });
