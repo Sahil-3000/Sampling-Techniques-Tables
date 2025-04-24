@@ -1,29 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sampling Technique Tables</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sampling Technique and Design Of Experiment</title>
   <!-- <link rel="stylesheet" href="/static/styles.css" /> -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  
+  <!-- <script src="{{ url_for('static', filename='merge.js') }}"></script> -->
 
 </head>
+
 <body>
-  <div class="container">
-    <h1>Sampling Technique Tables</h1>
-    <p>Generate PDF by entering Experiment Number:</p>
-    <form id="downloadForm">
-      <div class="inputs">
-        <input type="number" id="experiment-Number" placeholder="Enter Experiment Number" required />
-        <input type="number" id="roll-No" placeholder="Enter Your Roll No." required />
-        <input type="string" id="student-Name" placeholder="Enter Your Name" required />
+  <div class="form-container">
+    <h1>Sampling Technique Practical</h1>
+    <p>Generate PDF by entering the Following Details:</p>
+    <form id="pdfForm">
+      <!-- <div class="inputs"> -->
+      <!-- <input type="number" id="experiment-Number" placeholder="Enter Experiment Number" required />
+            <input type="number" id="roll-No" placeholder="Enter Your Roll No." required />
+            <input type="string" id="student-Name" placeholder="Enter Your Name" required /> -->
+      <div class="form-group">
+        <label for="txtUniversity">University Name</label>
+        <input type="text" id="txtUniversity" placeholder="Enter University Name" >
       </div>
-      <button type="submit">Generate PDF</button>
+      <div class="form-group">
+        <label for="txtDepartment">Department</label>
+        <input type="text" id="txtDepartment" placeholder="Enter Department" >
+      </div>
+      <div class="form-group">
+        <label for="txtSubject">Subject</label>
+        <input type="text" id="txtSubject" placeholder="Enter Subject" >
+      </div>
+      <div class="form-group">
+        <label for="txtSubmittedTo">Submitted To</label>
+        <input type="text" id="txtSubmittedTo" placeholder="Enter Name of Professor" >
+      </div>
+      <div class="form-group">
+        <label for="student-Name">Submitted By</label>
+        <input type="text" id="student-Name" placeholder="Enter Your Name" required>
+      </div>
+      <div class="form-group">
+        <label for="roll-No">Roll No</label>
+        <input type="text" id="roll-No" placeholder="Enter Roll No" required>
+      </div>
+      <button type="submit" class="btn-submit">Generate PDF</button>
+      <!-- </div> -->
+      <!-- <button type="submit">Generate PDF</button> -->
     </form>
     <p id="statusMessage"></p>
   </div>
 
+  
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
+
 </html>
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practical File PDF Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Practical File PDF Generator</h1>
+        <p>Fill out the details below to generate a comprehensive PDF for your practical file.</p>
+        <form id="pdfForm">
+            <div class="form-group">
+                <label for="txtUniversity">University Name</label>
+                <input type="text" id="txtUniversity" placeholder="Enter University Name" required>
+            </div>
+            <div class="form-group">
+                <label for="txtDepartment">Department</label>
+                <input type="text" id="txtDepartment" placeholder="Enter Department" required>
+            </div>
+            <div class="form-group">
+                <label for="txtSubject">Subject</label>
+                <input type="text" id="txtSubject" placeholder="Enter Subject" required>
+            </div>
+            <div class="form-group">
+                <label for="txtSubmittedTo">Submitted To</label>
+                <input type="text" id="txtSubmittedTo" placeholder="Enter Name of Professor" required>
+            </div>
+            <div class="form-group">
+                <label for="txtSubmittedBy">Submitted By</label>
+                <input type="text" id="txtSubmittedBy" placeholder="Enter Your Name" required>
+            </div>
+            <div class="form-group">
+                <label for="txtRollNo">Roll No</label>
+                <input type="text" id="txtRollNo" placeholder="Enter Roll No" required>
+            </div>
+            <button type="submit" class="btn-submit">Generate PDF</button>
+        </form>
+    </div>
+</body>
+</html> -->

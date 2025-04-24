@@ -410,19 +410,15 @@ def create_pdf(filename, rollNo):
 def generate_pdf():
     data = request.get_json()
     rollNo = data.get('rollNo')
-    experiment_no = data.get('experimentNo')
-    # population_size = data.get('populationSize')
     
     student_name = data.get('studentName')
-    if not experiment_no:
-        return jsonify({'error': 'Experiment number and roll no. is required'}), 400
 
     # Create folder if it doesn't exist
     folder_path = os.path.join(os.getcwd(), "generated_pdfs")
     os.makedirs(folder_path, exist_ok=True)
 
     # Save the PDF in that folder
-    filename = f"{student_name}_strata_experiment_{experiment_no}.pdf"
+    filename = f"{student_name}_strata_experiment_{rollNo}.pdf"
     file_path = os.path.join(folder_path, filename)
     
     # print(f"Generating PDF for {student_name} with roll no {rollNo}")
