@@ -22,7 +22,6 @@ async function mergePDFs(pdf1Bytes, pdf2Bytes) {
 }
 
 
-
 document.getElementById('pdfForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
@@ -39,23 +38,27 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
     return;
   }
 
+  const statusMessage = document.getElementById('statusMessage');
+  statusMessage.textContent = "";
 
+
+  let strataBlob = null;
   try {
     const response = await fetch('/generate-pdf', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ rollNo: rollNo, studentName: studentName })
+      body: JSON.stringify({ rollNo: rollNo, studentName: submittedBy })
     });
 
     if (response.ok) {
-      const strataBlob = await response.blob();
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(strataBlob);
-      link.download = `${studentName}_strata_experiment_${rollNo}.pdf`;
+      strataBlob = await response.blob();
+      // const link = document.createElement('a');
+      // link.href = window.URL.createObjectURL(strataBlob);
+      // link.download = `${studentName}_strata_experiment_${rollNo}.pdf`;
 
-      link.click();
+      // link.click();
       statusMessage.textContent = "PDF generated and downloaded successfully!";
     } else {
       const errorData = await response.json();
@@ -66,21 +69,22 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
     statusMessage.textContent = "An error occurred. Please try again.";
   }
 
-  const strataBytes = strataBlob.arrayBuffer();
+
 
   // Create a new PDF using jsPDF
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
+
   //Image addition logic
   const imgUrl = 'mdu logo.jpg'; // Replace with your image path or URL
 
   const image = new Image();
-  image.src = imgUrl;
+  image.src = 'static/mdu logo.jpg'; // 
   image.onload = function () {
     // Add the image at the specified position
     const imgX = 65; // X position
-    const imgY = 20; // Y position (adjusted to center content)
+    const imgY = 40; // Y position (adjusted to center content)
     const imgWidth = 80; // Image width
     const imgHeight = 70; // Image height
 
@@ -135,7 +139,13 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
     doc.text('Submitted To:', 50, submittedToY);
     doc.text('Submitted By:', 130, submittedToY);
     doc.setFontSize(14);
-    doc.text(`Prof. ${submittedTo}`, 50, submittedByY);
+    if(submittedTo){
+      doc.text(`Prof. ${submittedTo}`, 50, submittedByY);
+    }
+    else{
+      doc.text(`Prof. Gulshan Taneja`, 50, submittedByY);
+    }
+    
     doc.text(document.getElementById('student-Name').value, 130, submittedByY);
     doc.text(`Roll No: ${document.getElementById('roll-No').value}`, 130, rollNoY);
     // Draw a line after the university name
@@ -149,40 +159,45 @@ document.getElementById('pdfForm').addEventListener('submit', async function (e)
 
     // Convert jsPDF output to an ArrayBuffer for merging
     const pdfBytes = doc.output('arraybuffer');
-    
 
-
-
-    // Fetch an existing PDF to merge (adjust URL as necessary)
-    const existingPdfUrl = 'file/6-11 Sampling Techniques Practical File Final.pdf'; // Replace with actual file URL
-    fetch(strataBytes)
-      .then(res => res.arrayBuffer())
+    // 1. Convert strataBlob to ArrayBuffer
+    strataBlob.arrayBuffer()
       .then(strataBytes => {
-        // Merge the new PDF with the existing one
-        mergePDFs(pdfBytes, strataBytes).then(mergedPdfBytes => {
-          // Create a Blob and download the merged PDF
-          const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = `${submittedBy}(${rollNo})_Sampling Techniques.pdf`;
-          link.click();
-        });
+        // 2. First merge: cover page + strata PDF
+        return mergePDFs(pdfBytes, strataBytes);
+      })
+      .then(firstMergeBytes => {
+        // 3. Fetch the existing PDF file
+        return fetch('static/6-11 Sampling Techniques Practical File Final.pdf')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch existing PDF');
+            }
+            return response.arrayBuffer();
+          })
+          .then(existingPdfBytes => {
+            // 4. Second merge: (cover+strata) + existing PDF
+            return mergePDFs(firstMergeBytes, existingPdfBytes);
+          });
+      })
+      .then(finalPdfBytes => {
+        // 5. Create and download the final merged PDF
+        const blob = new Blob([finalPdfBytes], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${submittedBy}(${rollNo})_Sampling Techniques.pdf`;
+        link.click();
+
+        // Clean up
+        URL.revokeObjectURL(link.href);
+
+        statusMessage.textContent = "PDF generated and downloaded successfully!";
+      })
+      .catch(error => {
+        console.error("Error during PDF merging:", error);
+        statusMessage.textContent = "Error merging PDFs: " + error.message;
       });
   };
-
-
-
-
-  // const experimentNumber = document.getElementById('experiment-Number').value;
-  // const rollNo = document.getElementById('roll-No').value;
-  // const studentName = document.getElementById('student-Name').value;
-  const statusMessage = document.getElementById('statusMessage');
-  statusMessage.textContent = "";
-
-  // if (!studentName || !rollNo)  {
-  //   alert("Please enter an experiment number ,your roll no. and name.");
-  //   return;
-  // }
 
 
 });
